@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Modal, Button } from "react-bootstrap";
 
-const NewTask = ({ show, handleClose, save }) => {
+const EditTask = ({ show, updateTask, taskObj, toggle }) => {
   const [taskName, setTaskName] = useState("");
-  const [descripton, setDescription] = useState("");
+  const [description, setDescription] = useState("");
 
   const handleChange = (event) => {
     const name = event.target.name;
@@ -17,18 +17,24 @@ const NewTask = ({ show, handleClose, save }) => {
     }
   };
 
-  const handleSave = () => {
-    let taskObj = {};
-    taskObj["Name"] = taskName;
-    taskObj["Description"] = descripton;
-    save(taskObj);
+  useEffect(() => {
+    setTaskName(taskObj.Name);
+    setDescription(taskObj.Description);
+  }, []);
+
+  const handleUpdate = (e) => {
+    e.preventDefault();
+    let tempObj = {};
+    tempObj["Name"] = taskName;
+    tempObj["Description"] = description;
+    updateTask(tempObj);
   };
 
   return (
     <div>
-      <Modal show={show} onHide={handleClose}>
+      <Modal show={show} onHide={toggle}>
         <Modal.Header closeButton>
-          <Modal.Title>New Task</Modal.Title>
+          <Modal.Title>Edit Task</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <form>
@@ -48,18 +54,18 @@ const NewTask = ({ show, handleClose, save }) => {
                 rows="5"
                 className="form-control"
                 onChange={handleChange}
-                value={descripton}
+                value={description}
                 name="description"
               ></textarea>
             </div>
           </form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button variant="secondary" onClick={toggle}>
             Close
           </Button>
-          <Button variant="primary" onClick={handleSave}>
-            Save Changes
+          <Button variant="primary" onClick={handleUpdate}>
+            Update Changes
           </Button>
         </Modal.Footer>
       </Modal>
@@ -67,4 +73,4 @@ const NewTask = ({ show, handleClose, save }) => {
   );
 };
 
-export default NewTask;
+export default EditTask;

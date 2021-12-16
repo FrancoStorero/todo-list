@@ -25,11 +25,29 @@ export default function TodoList() {
       tempList.push(taskjobj);
       localStorage.setItem("taskList", JSON.stringify(tempList));
       setTaskList(tempList);
-      console.log();
+
       setShow(false);
     } else {
       setShow(false);
     }
+  };
+
+  const deleteTask = (index) => {
+    console.log(index);
+    let tempList = taskList;
+    tempList.splice(index, 1);
+    localStorage.setItem("taskList", JSON.stringify(tempList));
+    setTaskList(tempList);
+
+    window.location.reload();
+  };
+
+  const updateTask = (obj, index) => {
+    let tempList = taskList;
+    tempList[index] = obj;
+    localStorage.setItem("taskList", JSON.stringify(tempList));
+    setTaskList(tempList);
+    window.location.reload();
   };
 
   return (
@@ -43,7 +61,15 @@ export default function TodoList() {
       <div className="cardContainer">
         <NewTask show={show} handleClose={handleClose} save={saveTask} />
         {taskList &&
-          taskList.map((obj, index) => <Card taskObj={obj} index={index} />)}
+          taskList.map((obj, index) => (
+            <Card
+              handleClose={handleClose}
+              update={updateTask}
+              taskObj={obj}
+              index={index}
+              deleteTask={deleteTask}
+            />
+          ))}
       </div>
     </div>
   );
